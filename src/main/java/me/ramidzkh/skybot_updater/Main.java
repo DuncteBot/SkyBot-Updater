@@ -15,6 +15,9 @@ public class Main {
     static {
         String j = System.getProperty("java");
         
+        if(j == null)
+            j =  System.getProperty("java.home") + "/bin/java";
+        
         // Debugging
         // if(j == null) j = "C:\\Program Files\\Java\\jre1.8.0_131\\bin\\java.exe";
         
@@ -23,9 +26,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         if (!file.exists()
-                || (args.length > 0) ? false : args[0].equals("update-now"))
+                || ((args.length >= 1) ? args[0].equals("update-now") : false)) {
             System.out.println("Checking for updates now");
-            
+    
             try {
                 handleDownloadFile();
                 System.out.println("Successfully downloaded latest JAR file!");
@@ -35,6 +38,7 @@ public class Main {
                 
                 System.exit(1);
             }
+        }
         
         ProcessHandler handler;
         

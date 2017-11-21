@@ -29,6 +29,13 @@ public final class UpdateInfo {
     
     public static UpdateInfo load() {
         try {
+            // If only one of them exists
+            if(!Main.file.exists() ^ !file.exists()) {
+                Main.file.delete();
+                file.delete();
+                return null;
+            }
+            
             BufferedReader br = new BufferedReader(new FileReader(file));
             UpdateInfo info = new Gson().fromJson(br, UpdateInfo.class);
             br.close();
