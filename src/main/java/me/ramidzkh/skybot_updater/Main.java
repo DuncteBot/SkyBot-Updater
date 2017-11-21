@@ -22,7 +22,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        if (!file.exists())
+        if (!file.exists()
+                || (args.length > 0) ? false : args[0].equals("update-now"))
+            System.out.println("Checking for updates now");
+            
             try {
                 handleDownloadFile();
                 System.out.println("Successfully downloaded latest JAR file!");
@@ -73,7 +76,7 @@ public class Main {
             JsonObject release = GithubRequester.getLatestRelease(client);
             JsonObject asset = GithubRequester.getAsset(release);
             
-            if (info.olderThan(new UpdateInfo(release, asset)))
+            if (!info.equals(new UpdateInfo(release, asset)))
                 GithubRequester.downloadLatest(client, new FileOutputStream(file));
         }
     }

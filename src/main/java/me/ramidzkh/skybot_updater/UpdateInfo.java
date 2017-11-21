@@ -45,12 +45,14 @@ public final class UpdateInfo {
         // Save
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         
+        // Write it
         new GsonBuilder()
                 .setPrettyPrinting()
                 .serializeNulls()
                 .serializeSpecialFloatingPointValues()
                 .create().toJson(this, UpdateInfo.class, bw);
         
+        // Close it, flush all resources
         bw.close();
     }
     
@@ -70,7 +72,16 @@ public final class UpdateInfo {
         return len;
     }
     
-    public boolean olderThan(UpdateInfo update) {
-        return id < update.id;
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(this == o) return true;
+        
+        if(o.getClass() != UpdateInfo.class) return false;
+        
+        UpdateInfo ui = (UpdateInfo) o;
+        
+        try {
+            return ui.id == id && ui.ver.equals(ver) && ui.dl.equals(dl) && ui.len == len;
+        } catch (NullPointerException e) {return false;}
     }
 }

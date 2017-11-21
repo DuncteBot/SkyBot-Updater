@@ -37,9 +37,11 @@ public class GithubRequester {
     public static JsonObject getLatestRelease(OkHttpClient client)
             throws IOException {
         Request request = new Request.Builder()
-                                  .url("https://api.github.com/repos/duncte123/SkyBot/releases")
-                                  .header("User-Agent", "Skybot auto updater")
-                                  .build();
+                              // The URL of the releases API
+                              .url("https://api.github.com/repos/duncte123/SkyBot/releases")
+                              // All programs using the GitHub API needs a User-Agent
+                              .header("User-Agent", "Skybot auto updater")
+                              .build();
         Response response = client.newCall(request).execute();
         
         JsonArray releases = new JsonParser().parse(response.body().source().readUtf8()).getAsJsonArray();
@@ -56,6 +58,7 @@ public class GithubRequester {
     public static JsonObject getAsset(JsonObject release) {
         for (JsonElement asset : release.get("assets").getAsJsonArray()) {
             JsonObject jo = asset.getAsJsonObject();
+            // Matches skybot-x((.x*).x).jar
             if (jo.get("name").getAsString().matches("((?i)skybot)-((\\d*\\.)*\\d*)\\.jar")) {
                 try {
                     new UpdateInfo(release, jo).save();
