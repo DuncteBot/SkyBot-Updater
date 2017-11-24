@@ -52,7 +52,7 @@ public class Main {
                 
                 int exit = handler.returnCode();
                 
-                if (exit == 0x5454 || exit == 0x54) {
+                if (exit == 0x54) {
                     System.out.println("\nInitiating update procedure");
                     handleDownloadFile();
                     System.out.println("Restarting bot...\n\n");
