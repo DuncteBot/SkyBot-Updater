@@ -52,12 +52,12 @@ public class Main {
                 
                 int exit = handler.returnCode();
                 
-                if (exit == 0x5454) {
+                if (exit == 0x5454 || exit == 0x54) {
                     System.out.println("\nInitiating update procedure");
                     handleDownloadFile();
-                    System.out.println("Successfully downloaded latest JAR file!\nRetsarting bot...\n\n");
+                    System.out.println("Restarting bot...\n\n");
                 } else {
-                    System.out.printf("Program exited with exit code %s. Goodbye!", exit);
+                    System.out.printf("Program exited with exit code %s. Goodbye!%n", exit);
                     break;
                 }
             } catch (IOException e) {
@@ -69,8 +69,6 @@ public class Main {
 
     public static void handleDownloadFile()
             throws IOException {
-        if (file.exists())
-            file.delete();
         OkHttpClient client = new OkHttpClient();
         
         UpdateInfo info = UpdateInfo.load();
