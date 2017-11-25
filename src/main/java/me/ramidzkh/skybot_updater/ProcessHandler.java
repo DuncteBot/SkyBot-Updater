@@ -11,25 +11,25 @@ public class ProcessHandler {
     Process process;
 
     public ProcessHandler(String[] ev, String[] pv)
-    throws IOException {
+            throws IOException {
         String[] l;
         
         if(ev.length == 0
-                && pv.length == 0)
-            l = new String[] {Main.java, "-jar", "skybot.jar"};
+                   && pv.length == 0)
+            l = new String[] {Main.java, "-Dupdater", "-jar", "skybot.jar"};
         else if (ev.length == 0) {
-            List<String> ll = new ArrayList<>(Arrays.asList(Main.java, "-jar", "skybot.jar"));
+            List<String> ll = new ArrayList<>(Arrays.asList(Main.java, "-Dupdater", "-jar", "skybot.jar", "use-updater"));
             ll.addAll(Arrays.asList(pv));
             l = ll.toArray(new String[0]);
         } else if(pv.length == 0) {
             List<String> ll = new ArrayList<>(Arrays.asList(Main.java));
             ll.addAll(Arrays.asList(ev));
-            ll.addAll(Arrays.asList("-jar", "skybot.jar"));
+            ll.addAll(Arrays.asList("-Dupdater", "-jar", "skybot.jar", "use-updater"));
             l = ll.toArray(new String[0]);
         } else {
             List<String> ll = new ArrayList<>(Arrays.asList(Main.java));
             ll.addAll(Arrays.asList(ev));
-            ll.addAll(Arrays.asList("-jar", "skybot.jar"));
+            ll.addAll(Arrays.asList("-Dupdater", "-jar", "skybot.jar", "use-updater"));
             ll.addAll(Arrays.asList(pv));
             l = ll.toArray(new String[0]);
         }
@@ -52,5 +52,4 @@ public class ProcessHandler {
     public int returnCode() {
         return process.exitValue();
     }
-
 }
