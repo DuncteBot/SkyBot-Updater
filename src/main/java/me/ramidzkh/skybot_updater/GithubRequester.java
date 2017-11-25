@@ -79,10 +79,8 @@ public class GithubRequester {
     public static void download(JsonObject release, OutputStream out)
             throws IOException {
         HttpsURLConnection con = (HttpsURLConnection) new URL(
-                                                                     release.get("browser_download_url").getAsString()).openConnection();
+                                    release.get("browser_download_url").getAsString()).openConnection();
         
-        con.addRequestProperty("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
         con.addRequestProperty("Connection", "keep-alive");
         con.addRequestProperty("Content-Type", "application/octet-stream");
         

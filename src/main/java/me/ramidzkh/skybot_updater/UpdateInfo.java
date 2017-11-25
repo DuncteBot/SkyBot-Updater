@@ -30,7 +30,7 @@ public final class UpdateInfo {
     public static UpdateInfo load() {
         try {
             // If only one of them exists
-            if(!Main.file.exists() ^ !file.exists()) {
+            if(Main.file.exists() ^ file.exists()) {
                 Main.file.delete();
                 file.delete();
                 return null;

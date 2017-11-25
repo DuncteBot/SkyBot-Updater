@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
     
@@ -25,8 +26,17 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        if (!file.exists()
-                || ((args.length >= 1) ? args[0].equals("update-now") : false)) {
+        boolean doUpdate = Arrays.asList(args).contains("update-now");
+        String[] pv = new String[0], ev = new String[0];
+        
+        String a = System.getProperty("vmargs"), b = System.getProperty("args");
+        
+        if(a != null)
+            ev = a.split("\\s");
+        if(b != null)
+            pv = b.split("\\s");
+        
+        if (!file.exists() || doUpdate) {
             System.out.println("Checking for updates now");
     
             try {
@@ -44,7 +54,7 @@ public class Main {
         
         while (true) {
             try {
-                handler = new ProcessHandler();
+                handler = new ProcessHandler(ev, pv);
                 
                 handler.bind();
 
@@ -72,6 +82,7 @@ public class Main {
         OkHttpClient client = new OkHttpClient();
         
         UpdateInfo info = UpdateInfo.load();
+        
         if (info == null)
             GithubRequester.downloadLatest(client, new FileOutputStream(file));
         else {
