@@ -34,8 +34,6 @@ public class ProcessHandler {
             l = ll.toArray(new String[0]);
         }
         
-        System.out.println(Arrays.toString(l));
-        
         process = new ProcessBuilder()
                       .command(l)
                       .directory(new File(System.getProperty("user.dir")))
