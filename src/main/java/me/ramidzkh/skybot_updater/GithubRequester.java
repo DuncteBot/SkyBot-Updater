@@ -59,7 +59,7 @@ public class GithubRequester {
         for (JsonElement asset : release.get("assets").getAsJsonArray()) {
             JsonObject jo = asset.getAsJsonObject();
             // Matches skybot-x((.x*).x).jar
-            if (jo.get("name").getAsString().matches("((?i)skybot)-((\\d*\\.)*\\d*)\\.jar")) {
+            if (jo.get("name").getAsString().matches("((?i)skybot)-((\\d*\\.)*\\d*)_([A-z0-9]{8})\\.jar")) {
                 try {
                     new UpdateInfo(release, jo).save();
                 } catch (IOException e) {
