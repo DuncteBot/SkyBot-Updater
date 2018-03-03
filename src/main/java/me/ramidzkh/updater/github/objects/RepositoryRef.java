@@ -16,5 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'skybot-updater'
+package me.ramidzkh.updater.github.objects;
 
+import lombok.Data;
+
+@Data
+public class RepositoryRef {
+
+    private final String owner, name;
+}

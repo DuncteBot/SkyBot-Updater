@@ -16,5 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'skybot-updater'
+package me.ramidzkh.updater.github.objects;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class NotFound
+        extends RuntimeException {
+
+    private final String message = "", documentation_url = "";
+}

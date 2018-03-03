@@ -16,5 +16,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'skybot-updater'
+package me.ramidzkh.updater.github.objects;
 
+import lombok.Data;
+
+import java.util.List;
+
+/**
+ * A simple data class that will be deserialized by Gson
+ *
+ * @author ramidzkh
+ */
+@Data
+public class Release {
+
+    // Strings
+    private final String
+            // URLs
+            url, assets_url, upload_url, html_url,
+    // Metadata
+    tag_name, target_commitish, name, body,
+    // Time
+    created_at, published_at,
+    // Downloads
+    tarball_url, zipball_url;
+
+    // Integers
+    private final int id;
+
+    // Booleans
+    private final boolean draft, prerelease;
+
+    // ---- Other Github Objects ----
+
+    // Author
+    private final User author;
+
+    // Assets
+    private final List<Asset> assets;
+}

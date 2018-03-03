@@ -1,6 +1,6 @@
 /*
- * Skybot, a multipurpose discord bot
- *      Copyright (C) 2017  Duncan "duncte123" Sterken & Ramid "ramidzkh" Khan & Sanduhr32
+ * Skybot Updater, an updater application for SkyBot
+ *      Copyright (C) 2017, 2018  Duncan "duncte123" Sterken & Ramid "ramidzkh" Khan & Sanduhr32
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.ramidzkh.skybot_updater;
+package me.ramidzkh.updater;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

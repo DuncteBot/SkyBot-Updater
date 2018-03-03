@@ -16,5 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'skybot-updater'
+package me.ramidzkh.updater.github.objects;
 
+import lombok.Data;
+
+@Data
+public class Asset {
+
+    private final String
+            // Basic data
+            url, name, label,
+    // Downloading
+    content_type, state, browser_download_url,
+    // Time
+    created_at, updated_at;
+
+    private final int id, size, download_count;
+
+    private final User uploader;
+}
