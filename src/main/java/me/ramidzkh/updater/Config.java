@@ -38,7 +38,7 @@ public class Config {
     private Gson gson = new Gson();
     private JsonObject config = new JsonObject();
 
-    public void load(File in) {
+    public boolean load(File in) {
         if(in == null)
             throw new NullPointerException("in == null");
 
@@ -46,9 +46,13 @@ public class Config {
             BufferedReader reader = new BufferedReader(new FileReader(in));
             config = gson.fromJson(reader, JsonObject.class);
             reader.close();
-        } catch (IOException exception) {
-            new IOException("An error occured while reading the config from '" + in + "'", exception).printStackTrace();
+        } catch (Throwable exception) {
+            new Exception("An error occured while reading the config from '" + in + "'", exception).printStackTrace();
+
+            return false;
         }
+
+        return true;
     }
 
     public Config getNested(String path) {
