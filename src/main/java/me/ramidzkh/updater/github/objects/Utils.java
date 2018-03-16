@@ -30,7 +30,7 @@ public class Utils {
     public static Date date(String date) {
         try {
             return iso_8601.parse(date);
-        } catch (ParseException exception) {
+        } catch (Throwable exception) {
             return null;
         }
     }

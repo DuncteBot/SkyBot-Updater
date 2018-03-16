@@ -16,33 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-plugins {
-    id 'java'
-    id 'idea'
-    id 'application'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
-}
+package me.ramidzkh.updater;
 
-group 'me.ramidzkh'
-version '1.5.0'
+import lombok.Data;
 
-sourceCompatibility = 1.8
+import java.io.IOException;
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-}
+@Data
+public class ProcessHandler {
 
-dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+    private Process process;
 
-    // Lombok annotation processor
-    compileOnly 'org.projectlombok:lombok:1.16.20'
-}
+    public ProcessHandler(String[] commandLine)
+    throws IOException {
+        process = new ProcessBuilder()
+                .inheritIO()
+                .start();
+    }
 
-shadowJar {
-    mainClassName = "me.ramidzkh.updater.Main"
-    classifier = null
-    libsDirName = "../"
+    public void bind() {
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+            System.exit(1);
+        }
+    }
+
+    public int returnCode() {
+        return process.exitValue();
+    }
 }
