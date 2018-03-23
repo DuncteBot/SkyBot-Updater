@@ -18,26 +18,26 @@
 
 package me.ramidzkh.updater;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import me.ramidzkh.updater.github.GithubRequester;
 import me.ramidzkh.updater.github.objects.Release;
 import me.ramidzkh.updater.github.objects.RepositoryRef;
 import me.ramidzkh.updater.github.objects.Utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
 
     public static File configFile = new File(System.getProperty("user.dir"), "updater.json");
 
-    public static void main(String[] args) {
-        System.out.println("\tSkybot Updater, an updater application for SkyBot");
-        System.out.println("\tCopyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan & Sanduhr32\n\n");
+    public static void main(String[] args) throws IOException {
+        System.out.println("Skybot Updater, an updater application for SkyBot");
+        System.out.println("Copyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan & Sanduhr32\n\n");
 
         // The config object
         Config config;
@@ -98,10 +98,54 @@ public class Main {
 
         RepositoryRef repository = new RepositoryRef("duncte123", "SkyBot");
 
-        boolean check = config.getOrElse("autocheck", new JsonPrimitive(true)).getAsJsonPrimitive().getAsBoolean();
+        try {
+            List<Release> releases = github.getReleases(repository);
+            Release release = releases.get(0);
 
-        if(!check)
-            check = config.getNested("version").getConfig().equals(new JsonObject());
-        
+            github.download(release, new FileOutputStream("skybot.jar"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<String> aaaa = Arrays.asList("java");
+
+        JsonArray erfgdcfgtrfbg = config.getOrElse("jvm", new JsonArray()).getAsJsonArray();
+        List<String> dfgjfdvgetr = config.getGson().fromJson(erfgdcfgtrfbg, ArrayList.class);
+
+        JsonArray fethrydfhv = config.getOrElse("program", new JsonArray()).getAsJsonArray();
+        List<String> grvwe = config.getGson().fromJson(fethrydfhv, ArrayList.class);
+
+        aaaa.addAll(dfgjfdvgetr);
+        aaaa.add("-jar");
+        aaaa.add("skybot.jar");
+        aaaa.addAll(grvwe);
+
+        // Loop
+        Runnable ree;
+        ree = () -> {
+            try {
+                ProcessHandler handler = new ProcessHandler(aaaa.toArray(new String[0]));
+                handler.bind();
+
+                int code = handler.returnCode();
+
+                if(code == 0x54) {
+                    try {
+                        List<Release> releases = github.getReleases(repository);
+                        Release release = releases.get(0);
+
+                        github.download(release, new FileOutputStream("skybot.jar"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else System.exit(0);
+            } catch (Throwable thr) {
+                thr.printStackTrace();
+                System.exit("no".hashCode() & 0x7F);
+            }
+        };
+
+        while(true)
+            ree.run();
     }
 }
