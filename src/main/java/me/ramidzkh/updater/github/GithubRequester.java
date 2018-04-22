@@ -134,4 +134,8 @@ public class GithubRequester {
 
         return String.format("\r[%s%s] %.2f%%", equal, space, (((double) totalLength) / ((double) size)) * 100F);
     }
+
+    public Gson getGson() {
+        return gson;
+    }
 }

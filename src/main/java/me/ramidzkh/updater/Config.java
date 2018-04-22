@@ -55,6 +55,10 @@ public class Config {
         return true;
     }
 
+    public Config(Gson gson, JsonObject jsonObject) {
+
+    }
+
     public Config getNested(String path) {
         if(path == null)
             throw new NullPointerException("path == null");
@@ -88,5 +92,9 @@ public class Config {
         T object = gson.fromJson(toParse, type);
 
         return object == null ? orElse : object;
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 }

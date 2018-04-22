@@ -23,5 +23,18 @@ import lombok.Data;
 @Data
 public class RepositoryRef {
 
-    private final String owner, name;
+    private String owner, name;
+
+    public RepositoryRef(String owner, String name) {
+        this.owner = owner;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
 }
