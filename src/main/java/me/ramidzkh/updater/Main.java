@@ -34,6 +34,7 @@ import java.util.List;
 public class Main {
 
     public static File configFile = new File(System.getProperty("user.dir"), "updater.json");
+    public static String VERSION = "";
 
     public static void main(String[] args) throws IOException {
         System.out.println("Skybot Updater, an updater application for SkyBot");
@@ -102,7 +103,7 @@ public class Main {
             List<Release> releases = github.getReleases(repository);
             Release release = releases.get(0);
 
-            github.download(release, new FileOutputStream("skybot.jar"));
+            github.download(release, new FileOutputStream("skybot-" + VERSION + ".jar"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +118,7 @@ public class Main {
 
         aaaa.addAll(dfgjfdvgetr);
         aaaa.add("-jar");
-        aaaa.add("skybot.jar");
+        aaaa.add("skybot-" + VERSION + ".jar");
         aaaa.addAll(grvwe);
 
         // Loop
@@ -134,10 +135,16 @@ public class Main {
                         List<Release> releases = github.getReleases(repository);
                         Release release = releases.get(0);
 
-                        github.download(release, new FileOutputStream("skybot.jar"));
+                        github.download(release, new FileOutputStream("skybot-.jar"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else if (code == 0x64) {
+                    String oldVersion = VERSION;
+                    Files.delete(new File("skybot-" + oldVersion + ".jar").toPath());
+                    int index = aaaa.indexOf("skybot-" + oldVersion + ".jar");
+                    VERSION = getVersion();
+                    aaaa.set(index, "skybot-" + VERSION + ".jar");
                 } else System.exit(0);
             } catch (Throwable thr) {
                 thr.printStackTrace();
@@ -148,4 +155,20 @@ public class Main {
         while(true)
             ree.run();
     }
+    
+    private static String getVersion() {
+        Process process = Runtime.getRuntime().exec(getCommand("gradlew printVersion"));
+        Scanner scanner = new Scanner(process.getInputStream());
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]_.{8}")
+                return line;
+        }
+        return "";
+    }
+    
+    private static String getCommand(String cmd): String {
+         return
+             (System.getProperty("os.name").contains("Windows", false)) ? "cmd /C " + cmd : "skybotsrc/./" + cmd;
+     }
 }
