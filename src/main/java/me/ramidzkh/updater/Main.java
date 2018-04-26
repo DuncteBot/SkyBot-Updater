@@ -18,18 +18,21 @@
 
 package me.ramidzkh.updater;
 
-import com.google.gson.*;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import me.ramidzkh.updater.github.GithubRequester;
 import me.ramidzkh.updater.github.objects.Release;
 import me.ramidzkh.updater.github.objects.RepositoryRef;
-import me.ramidzkh.updater.github.objects.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -93,6 +96,8 @@ public class Main {
             config = $config;
         }
 
+        config.save(configFile);
+
         // Github stuff
         GithubRequester github = new GithubRequester();
         github.setGson(config.getGson());
@@ -108,7 +113,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        List<String> aaaa = Arrays.asList("java");
+        List<String> command = new ArrayList<>();
+        command.add("java");
 
         JsonArray erfgdcfgtrfbg = config.getOrElse("jvm", new JsonArray()).getAsJsonArray();
         List<String> dfgjfdvgetr = config.getGson().fromJson(erfgdcfgtrfbg, ArrayList.class);
@@ -116,16 +122,18 @@ public class Main {
         JsonArray fethrydfhv = config.getOrElse("program", new JsonArray()).getAsJsonArray();
         List<String> grvwe = config.getGson().fromJson(fethrydfhv, ArrayList.class);
 
-        aaaa.addAll(dfgjfdvgetr);
-        aaaa.add("-jar");
-        aaaa.add("skybot-" + VERSION + ".jar");
-        aaaa.addAll(grvwe);
+        command.addAll(dfgjfdvgetr);
+        command.add("-jar");
+        command.add("skybot-" + VERSION + ".jar");
+        command.addAll(grvwe);
+
+        config.save(configFile);
 
         // Loop
-        Runnable ree;
-        ree = () -> {
+        Runnable runnable;
+        runnable = () -> {
             try {
-                ProcessHandler handler = new ProcessHandler(aaaa.toArray(new String[0]));
+                ProcessHandler handler = new ProcessHandler(command.toArray(new String[0]));
                 handler.bind();
 
                 int code = handler.returnCode();
@@ -142,9 +150,9 @@ public class Main {
                 } else if (code == 0x64) {
                     String oldVersion = VERSION;
                     Files.delete(new File("skybot-" + oldVersion + ".jar").toPath());
-                    int index = aaaa.indexOf("skybot-" + oldVersion + ".jar");
+                    int index = command.indexOf("skybot-" + oldVersion + ".jar");
                     VERSION = getVersion();
-                    aaaa.set(index, "skybot-" + VERSION + ".jar");
+                    command.set(index, "skybot-" + VERSION + ".jar");
                 } else System.exit(0);
             } catch (Throwable thr) {
                 thr.printStackTrace();
@@ -153,22 +161,28 @@ public class Main {
         };
 
         while(true)
-            ree.run();
+            runnable.run();
     }
     
     private static String getVersion() {
-        Process process = Runtime.getRuntime().exec(getCommand("gradlew printVersion"));
+        Process process = null;
+        try {
+            process = Runtime.getRuntime().exec(getCommand("gradlew printVersion"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
         Scanner scanner = new Scanner(process.getInputStream());
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]_.{8}")
+            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]_.{8}"))
                 return line;
         }
         return "";
     }
     
-    private static String getCommand(String cmd): String {
+    private static String getCommand(String cmd) {
          return
-             (System.getProperty("os.name").contains("Windows", false)) ? "cmd /C " + cmd : "skybotsrc/./" + cmd;
+             (System.getProperty("os.name").contains("Windows")) ? "cmd /C " + cmd : "skybotsrc/./" + cmd;
      }
 }

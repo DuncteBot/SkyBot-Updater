@@ -29,7 +29,7 @@ public class ProcessHandler {
 
     public ProcessHandler(String[] commandLine)
     throws IOException {
-        process = new ProcessBuilder()
+        process = new ProcessBuilder(commandLine)
                 .inheritIO()
                 .start();
     }

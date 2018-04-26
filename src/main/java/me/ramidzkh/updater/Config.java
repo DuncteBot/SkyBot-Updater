@@ -24,19 +24,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.*;
 
 import static java.util.Optional.ofNullable;
 
 @Data
-@NoArgsConstructor
 @Builder
 public class Config {
 
-    private Gson gson = new Gson();
-    private JsonObject config = new JsonObject();
+    private Gson gson;
+    private JsonObject config;
 
     public boolean load(File in) {
         if(in == null)
@@ -53,10 +51,6 @@ public class Config {
         }
 
         return true;
-    }
-
-    public Config(Gson gson, JsonObject jsonObject) {
-
     }
 
     public Config getNested(String path) {
@@ -76,8 +70,9 @@ public class Config {
             throw new NullPointerException("path == null");
 
         JsonElement element = config.get(name);
-        if(element == null)
+        if(element == null) {
             config.add(name, orElse);
+        }
 
         return config.get(name);
     }
@@ -94,7 +89,9 @@ public class Config {
         return object == null ? orElse : object;
     }
 
-    public Gson getGson() {
-        return gson;
+    public void save(File f) throws IOException {
+        try (Writer writer = new FileWriter(f)) {
+            gson.toJson(config, writer);
+        }
     }
 }
