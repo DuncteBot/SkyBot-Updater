@@ -183,6 +183,6 @@ public class Main {
     
     private static String getCommand(String cmd) {
          return
-             (System.getProperty("os.name").contains("Windows")) ? "cmd /C " + cmd : "skybotsrc/./" + cmd;
+             (System.getProperty("os.name").contains("Windows")) ? "cmd /C " + cmd : "./" + cmd;
      }
 }
