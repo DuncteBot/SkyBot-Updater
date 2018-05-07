@@ -30,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -116,16 +115,16 @@ public class Main {
         List<String> command = new ArrayList<>();
         command.add("java");
 
-        JsonArray erfgdcfgtrfbg = config.getOrElse("jvm", new JsonArray()).getAsJsonArray();
-        List<String> dfgjfdvgetr = config.getGson().fromJson(erfgdcfgtrfbg, ArrayList.class);
+        JsonArray jvmArguments = config.getOrElse("jvm", new JsonArray()).getAsJsonArray();
+        List<String> jvmArgumentsList = config.getGson().fromJson(jvmArguments, ArrayList.class);
 
-        JsonArray fethrydfhv = config.getOrElse("program", new JsonArray()).getAsJsonArray();
-        List<String> grvwe = config.getGson().fromJson(fethrydfhv, ArrayList.class);
+        JsonArray programArguments = config.getOrElse("program", new JsonArray()).getAsJsonArray();
+        List<String> programArgumentsList = config.getGson().fromJson(programArguments, ArrayList.class);
 
-        command.addAll(dfgjfdvgetr);
+        command.addAll(jvmArgumentsList);
         command.add("-jar");
         command.add("skybot-" + VERSION + ".jar");
-        command.addAll(grvwe);
+        command.addAll(programArgumentsList);
 
         config.save(configFile);
 
