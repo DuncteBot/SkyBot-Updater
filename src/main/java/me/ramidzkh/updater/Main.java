@@ -37,10 +37,17 @@ public class Main {
 
     public static File configFile = new File(System.getProperty("user.dir"), "updater.json");
     public static String VERSION = "";
+    private static boolean enableGithub = false;
 
     public static void main(String[] args) throws IOException {
         System.out.println("Skybot Updater, an updater application for SkyBot");
         System.out.println("Copyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan & Sanduhr32\n\n");
+        
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("--legacy-github-requester") {
+                enableGithub = true;
+            }
+        }
 
         // The config object
         Config config;
@@ -102,14 +109,18 @@ public class Main {
         github.setGson(config.getGson());
 
         RepositoryRef repository = new RepositoryRef("duncte123", "SkyBot");
+        
+        if (enableGithub) {
+            try {
+                List<Release> releases = github.getReleases(repository);
+                Release release = releases.get(0);
 
-        try {
-            List<Release> releases = github.getReleases(repository);
-            Release release = releases.get(0);
-
-            github.download(release, new FileOutputStream("skybot-" + VERSION + ".jar"));
-        } catch (IOException e) {
-            e.printStackTrace();
+                github.download(release, new FileOutputStream("skybot-" + VERSION + ".jar"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            VERSION = getVersion();
         }
 
         List<String> command = new ArrayList<>();
@@ -137,7 +148,7 @@ public class Main {
 
                 int code = handler.returnCode();
 
-                if(code == 0x54) {
+                if(code == 0x54 && enableGithub) {
                     try {
                         List<Release> releases = github.getReleases(repository);
                         Release release = releases.get(0);
@@ -146,9 +157,9 @@ public class Main {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (code == 0x64) {
+                } else if (code == 0x64 || (code == 0x54 && !enableGithub)) {
                     String oldVersion = VERSION;
-                    Files.delete(new File("skybot-" + oldVersion + ".jar").toPath());
+                    Files.deleteIfExists(new File("skybot-" + oldVersion + ".jar").toPath());
                     int index = command.indexOf("skybot-" + oldVersion + ".jar");
                     VERSION = getVersion();
                     command.set(index, "skybot-" + VERSION + ".jar");
@@ -174,7 +185,7 @@ public class Main {
         Scanner scanner = new Scanner(process.getInputStream());
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]_.{8}"))
+            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]{1,3}_.{8}"))
                 return line;
         }
         return "";
@@ -182,6 +193,6 @@ public class Main {
     
     private static String getCommand(String cmd) {
          return
-             (System.getProperty("os.name").contains("Windows")) ? "cmd /C " + cmd : "./" + cmd;
+             (System.getProperty("os.name").contains("Windows")) ? "cmd /C " + cmd : (cmd.startsWith("gradle")) ? "./" + cmd : cmd;
      }
 }
