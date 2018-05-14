@@ -186,14 +186,14 @@ public class Main {
         Scanner scanner = new Scanner(process.getInputStream());
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]{1,3}_.{8}"))
+            if (line.matches("[0-9]\\.[0-9]{1,3}\\.[0-9]{1,3}_.{6,9}"))
                 return line;
         }
-        return "";
+        return "0.0.0";
     }
     
     private static String getCommand(String cmd) {
-         return
-             (System.getProperty("os.name").contains("Windows")) ? "cmd /C " + cmd : (cmd.startsWith("gradle")) ? "./" + cmd : cmd;
+         return System.getProperty("os.name").contains("Windows") ? "cmd /C " + cmd :
+                 cmd.startsWith("gradle") ? "./" + cmd : cmd;
      }
 }
