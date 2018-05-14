@@ -133,6 +133,7 @@ public class Main {
         List<String> programArgumentsList = config.getGson().fromJson(programArguments, ArrayList.class);
 
         command.addAll(jvmArgumentsList);
+        command.add("-Dupdater");
         command.add("-jar");
         command.add("skybot-" + VERSION + ".jar");
         command.addAll(programArgumentsList);
