@@ -44,7 +44,7 @@ public class Main {
         System.out.println("Copyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan & Sanduhr32\n\n");
         
         for (String arg : args) {
-            if (arg.equalsIgnoreCase("--legacy-github-requester") {
+            if (arg.equalsIgnoreCase("--legacy-github-requester")) {
                 enableGithub = true;
             }
         }
