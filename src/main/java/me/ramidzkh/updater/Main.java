@@ -35,8 +35,8 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static File configFile = new File(System.getProperty("user.dir"), "updater.json");
-    public static String VERSION = "";
+    private static File configFile = new File(System.getProperty("user.dir"), "updater.json");
+    private static String VERSION = "";
     private static boolean enableGithub = false;
 
     public static void main(String[] args) throws IOException {
@@ -127,10 +127,10 @@ public class Main {
         command.add("java");
 
         JsonArray jvmArguments = config.getOrElse("jvm", new JsonArray()).getAsJsonArray();
-        List<String> jvmArgumentsList = config.getGson().fromJson(jvmArguments, ArrayList.class);
+        @SuppressWarnings("unchecked") List<String> jvmArgumentsList = config.getGson().fromJson(jvmArguments, ArrayList.class);
 
         JsonArray programArguments = config.getOrElse("program", new JsonArray()).getAsJsonArray();
-        List<String> programArgumentsList = config.getGson().fromJson(programArguments, ArrayList.class);
+        @SuppressWarnings("unchecked") List<String> programArgumentsList = config.getGson().fromJson(programArguments, ArrayList.class);
 
         command.addAll(jvmArgumentsList);
         command.add("-Dupdater");
@@ -149,7 +149,7 @@ public class Main {
 
                 int code = handler.returnCode();
 
-                if(code == 0x54 && enableGithub) {
+                if(code == 0x54 && enableGithub) { //update from git
                     try {
                         List<Release> releases = github.getReleases(repository);
                         Release release = releases.get(0);
@@ -158,11 +158,16 @@ public class Main {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (code == 0x64 || (code == 0x54 && !enableGithub)) {
+                } else if (code == 0x64) { //update from gradle
                     String oldVersion = VERSION;
                     Files.deleteIfExists(new File("skybot-" + oldVersion + ".jar").toPath());
                     int index = command.indexOf("skybot-" + oldVersion + ".jar");
                     VERSION = getVersion();
+                    command.set(index, "skybot-" + VERSION + ".jar");
+                }
+                /* not using !enableGithub here because enableGithub is always false at this point */
+                else if(code == 0x20 || code == 0x54) { //reboot
+                    int index = command.indexOf("skybot-" + VERSION + ".jar");
                     command.set(index, "skybot-" + VERSION + ".jar");
                 } else System.exit(0);
             } catch (Throwable thr) {
