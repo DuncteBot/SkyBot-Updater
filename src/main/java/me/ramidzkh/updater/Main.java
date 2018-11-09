@@ -108,7 +108,7 @@ public class Main {
         GithubRequester github = new GithubRequester();
         github.setGson(config.getGson());
 
-        RepositoryRef repository = new RepositoryRef("duncte123", "SkyBot");
+        RepositoryRef repository = new RepositoryRef("DuncteBot", "SkyBot");
         
         if (enableGithub) {
             try {
