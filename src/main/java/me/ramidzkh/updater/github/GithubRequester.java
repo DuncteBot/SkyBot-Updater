@@ -33,6 +33,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,7 +46,7 @@ import static me.ramidzkh.updater.github.objects.Utils.safeElse;
 @NoArgsConstructor
 public class GithubRequester {
 
-    public static final Pattern ASSET_NAME = Pattern.compile("skybot-(\\d+\\.)*\\d+(_[0-9A-Fa-f]{8})?\\.jar");
+    public static final Pattern ASSET_NAME = Pattern.compile("skybot-(\\d+\\.)*\\d+(_[0-9A-Fa-f]{6,9})?\\.jar");
 
     private OkHttpClient client = new OkHttpClient();
     private String appName = "Github-App";
@@ -74,7 +75,7 @@ public class GithubRequester {
         ResponseBody body = response.body();
 
         @Cleanup
-        BufferedReader reader = new BufferedReader(new InputStreamReader(body.byteStream(), "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(body.byteStream(), StandardCharsets.UTF_8));
 
         try {
             Release[] releases = gson.fromJson(reader, Release[].class);
@@ -89,7 +90,7 @@ public class GithubRequester {
     public void download(Release release, OutputStream out) throws IOException {
         List<Asset> assets = release.getAssets();
 
-        if (assets.size() == 0)
+        if (assets.isEmpty())
             return;
 
         Asset toDownload = assets.parallelStream()
@@ -103,6 +104,7 @@ public class GithubRequester {
 
         Response response = client.newCall(new Request.Builder()
                 .url(url)
+                .addHeader("User-Agent", appName)
                 .header("Content-Type", toDownload.getContent_type())
                 .header("Connection", "keep-alive")
                 .build()).execute();
@@ -112,14 +114,16 @@ public class GithubRequester {
 
         InputStream in = response.body().byteStream();
 
-        byte[] bytes = new byte[1024];
-        int len, totalLength = 0;
+        try (out) {
+            byte[] bytes = new byte[1024];
+            int len, totalLength = 0;
 
-        while ((len = in.read(bytes)) > 0) {
-            out.write(bytes, 0, len);
-            totalLength += len;
+            while ((len = in.read(bytes)) > 0) {
+                out.write(bytes, 0, len);
+                totalLength += len;
 
-            System.out.print(buildBar(totalLength, toDownload.getSize()));
+                System.out.print(buildBar(totalLength, toDownload.getSize()));
+            }
         }
 
         System.out.println("\n\nDownloaded\n\n");

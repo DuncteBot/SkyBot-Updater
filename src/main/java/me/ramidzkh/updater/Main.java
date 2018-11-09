@@ -37,11 +37,11 @@ public class Main {
 
     private static File configFile = new File(System.getProperty("user.dir"), "updater.json");
     private static String VERSION = "";
-    private static boolean enableGithub = false;
+    private static boolean enableGithub = true;
 
     public static void main(String[] args) throws IOException {
         System.out.println("Skybot Updater, an updater application for SkyBot");
-        System.out.println("Copyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan & Sanduhr32\n\n");
+        System.out.println("Copyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan\n\n");
         
         for (String arg : args) {
             if (arg.equalsIgnoreCase("--legacy-github-requester")) {
