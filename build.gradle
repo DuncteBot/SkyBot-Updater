@@ -25,7 +25,7 @@ plugins {
 }
 
 group 'me.ramidzkh'
-version '1.5.1'
+version '1.5.2'
 
 sourceCompatibility = JavaVersion.VERSION_1_10
 

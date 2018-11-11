@@ -44,8 +44,8 @@ public class Main {
         System.out.println("Copyright (C) 2017, 2018  Duncan \"duncte123\" Sterken & Ramid \"ramidzkh\" Khan\n\n");
         
         for (String arg : args) {
-            if (arg.equalsIgnoreCase("--legacy-github-requester")) {
-                enableGithub = true;
+            if (arg.equalsIgnoreCase("--use-gradle")) {
+                enableGithub = false;
             }
         }
 
@@ -110,7 +110,7 @@ public class Main {
 
         RepositoryRef repository = new RepositoryRef("DuncteBot", "SkyBot");
         
-        if (enableGithub) {
+        /*if (enableGithub) {
             try {
                 List<Release> releases = github.getReleases(repository);
                 Release release = releases.get(0);
@@ -120,6 +120,10 @@ public class Main {
                 e.printStackTrace();
             }
         } else {
+            VERSION = getVersion();
+        }*/
+
+        if (!enableGithub) {
             VERSION = getVersion();
         }
 
